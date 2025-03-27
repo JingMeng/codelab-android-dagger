@@ -44,6 +44,9 @@ android {
         androidTest {
             java.srcDir sharedTestDir
         }
+        main {
+            java.srcDirs += "$buildDir/generated/source/kapt/main"
+        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
