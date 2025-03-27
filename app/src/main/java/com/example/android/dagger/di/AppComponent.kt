@@ -31,6 +31,10 @@ import javax.inject.Singleton
 @Component(modules = [StorageModule::class, AppSubcomponents::class])
 interface AppComponent {
 
+
+    /**
+     * 为在这个 Component 下的  modules 提供参数，比如 context
+     */
     // Factory to create instances of the AppComponent
     @Component.Factory
     interface Factory {
