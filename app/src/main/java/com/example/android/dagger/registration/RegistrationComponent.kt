@@ -28,6 +28,10 @@ import dagger.Subcomponent
 @Subcomponent
 interface RegistrationComponent {
 
+    /**
+     * 单利的范围就是这个来决定的、
+     * 和 上面的 Classes annotated with @ActivityScope will have a unique instance in this Component 这句话是对应的
+     */
     // Factory to create instances of RegistrationComponent
     @Subcomponent.Factory
     interface Factory {

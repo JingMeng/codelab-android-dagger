@@ -18,6 +18,7 @@ package com.example.android.dagger.registration
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.example.android.dagger.MyApplication
 import com.example.android.dagger.R
@@ -37,6 +38,28 @@ class RegistrationActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
+        /**
+         * 这个就比较好理解了：
+         *  1. 按照之前有些blog的说法被自定义的注解修饰的都是单利的
+         *    比如我们的 RegistrationViewModel ，在 下面的         registrationComponent.inject(this) 追溯中
+         *    确实是使用到了 registrationViewModelProvider ，并且是单利的
+         *
+         *  2. 但是这个单利的前提是
+         *  (application as MyApplication).appComponent
+         *             .registrationComponent().create() 作用域内
+         *
+         *         this.registrationViewModelProvider = DoubleCheck.provider(RegistrationViewModel_Factory.create(appComponent.userManagerProvider));
+         *         这个里面的对象是每次创建的
+         *
+         *  3.         Log.i(
+         *             "RegistrationActivity",
+         *             "---------------验证单利的范围-----------" + registrationViewModel
+         *         );
+         *  打印日志验证
+         *
+         *  只需要注册，登录，退出登录，解绑重新注册 就会导致界面重新创建
+         *
+         */
         // Creates an instance of Registration component by grabbing the factory from the app graph
         registrationComponent = (application as MyApplication).appComponent
             .registrationComponent().create()
@@ -44,6 +67,15 @@ class RegistrationActivity : AppCompatActivity() {
         // Injects this activity to the just created Registration component
         registrationComponent.inject(this)
 
+        /**
+         *  ---------------验证单利的范围-----------com.example.android.dagger.registration.RegistrationViewModel@e768dcb
+         *  ---------------验证单利的范围-----------com.example.android.dagger.registration.RegistrationViewModel@d62d657
+         *
+         */
+        Log.i(
+            "RegistrationActivity",
+            "---------------验证单利的范围-----------" + registrationViewModel
+        );
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_registration)
 
